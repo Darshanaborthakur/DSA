@@ -1,0 +1,72 @@
+#include<iostream>
+#include<Queue>
+using namespace std;
+class Queue{
+	       public:
+	       	      int *arr;
+	       	      int size;
+	       	      int front;
+	       	      int rear;
+	    Queue(int size)
+		 {
+		 	this->size=size;
+		 	arr=new int[size];
+		 	front=0;
+		 	rear=0;
+		 	
+		 }
+};
+void enQueue(int num)
+{
+	    if(rear==size)
+	    {
+	    	return -1;
+	    	
+		}
+		else{
+			   arr[rear]=num;
+			   rear++;
+		}
+}
+bool isEmpty()
+{
+	if(front==rear)
+	{
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+void deQueue()
+{
+	if(front==rear)
+	{
+		return -1;
+	}
+	else{
+		rear--;
+		
+		
+	  }
+}
+int front()
+{
+	if(front==rear)
+	{
+		return -1;
+	}
+	else{
+		return arr[front];
+	}
+}
+int main()
+{
+	Queue q(5);
+	q.enQueue(1);
+	q.enQueue(2);
+	q.enQueue(3);
+	q.enQueue(4);
+	cout<<"size of the queue:"<<q.size()<<endl;
+	return 0;
+}
