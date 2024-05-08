@@ -1,0 +1,228 @@
+#include <iostream>
+using namespace std;
+
+int TRUE = 1, FALSE = 0;
+
+typedef struct node
+{
+    struct node *left;
+    int data;
+    struct node *right;
+} * Btree;
+
+Btree addToTree(Btree, int);
+void preorderTrav(Btree);
+void postorderTrav(Btree);
+void inorderTrav(Btree);
+Btree searchTree(Btree, int);
+Btree inorder_successor(Btree);
+void deleteNode(Btree, Btree);
+Btree searchParent(Btree, int);
+void destroyTree(Btree);
+
+Btree addToTree(Btree root, int val)
+{
+    if (root == NULL)
+    {
+        root = new struct node;
+        root->left = NULL;
+        root->data = val;
+        root->right = NULL;
+        return root;
+    }
+    else
+    {
+        if (val < root->data)
+        {
+            root->left = addToTree(root->left, val);
+        }
+        else
+        {
+            root->right = addToTree(root->right, val);
+        }
+        return root;
+    }
+}
+
+void preorderTrav(Btree root)
+{
+    if (root != NULL)
+    {
+        cout << root->data << "\t";
+        preorderTrav(root->left);
+        preorderTrav(root->right);
+    }
+}
+
+void inorderTrav(Btree root)
+{
+    if (root != NULL)
+    {
+        inorderTrav(root->left);
+        cout << root->data << "\t";
+        inorderTrav(root->right);
+    }
+}
+
+void postorderTrav(Btree root)
+{
+    if (root != NULL)
+    {
+        postorderTrav(root->left);
+        postorderTrav(root->right);
+        cout << root->data << "\t";
+    }
+}
+
+Btree searchTree(Btree root, int VAL)
+{
+    if (root == NULL || root->data == VAL)
+    {
+        return root;
+    }
+    else if (VAL < root->data)
+    {
+        return searchTree(root->left, VAL);
+    }
+    else
+    {
+        return searchTree(root->right, VAL);
+    }
+}
+
+Btree inorder_successor(Btree root)
+{
+    Btree temp = root->right;
+    if (temp == NULL)
+    {
+        return NULL;
+    }
+
+    while (temp->left)
+    {
+        temp = temp->left;
+    }
+
+    return temp;
+}
+
+void deleteNode(Btree root, Btree node)
+{
+    Btree parent, successor;
+    if (node->left == NULL && node->right == NULL)
+    {
+        parent = searchParent(root, node->data);
+        if (parent->left == node)
+        {
+            parent->left = NULL;
+        }
+        else
+        {
+            parent->right = NULL;
+        }
+        delete node;
+    }
+    else if(node->left == NULL && node->right!= NULL || node->left!= NULL && node->right == NULL){
+        parent = searchParent(root, node->data);
+        if(parent->left == node){
+            if(node->left == NULL){
+                parent->left = node->right;
+            }
+            else{
+                parent->left = node->left;
+            }
+        }
+        if(parent->right == node){
+            if(node->left == NULL){
+                parent->right = node->right;
+            }
+            else{
+                parent->right = node->left;
+            }
+        }
+        delete node;
+    }
+    else
+    {
+        successor = inorder_successor(node);
+        node->data = successor->data;
+        deleteNode(root, successor);
+    }
+}
+
+Btree searchParent(Btree root, int VAL)
+{
+    if (root == NULL || (root->left && root->left->data == VAL) || (root->right && root->right->data == VAL))
+    {
+        return root;
+    }
+    else if (VAL < root->data)
+    {
+        return searchParent(root->left, VAL);
+    }
+    else
+    {
+        return searchParent(root->right, VAL);
+    }
+}
+
+void destroyTree(Btree root)
+{
+    if (root != NULL)
+    {
+        destroyTree(root->left);
+        destroyTree(root->right);
+        delete root;
+    }
+}
+
+int main()
+{
+    Btree B = NULL, temp;
+    int x;
+    cout << "\n Enter as many numbers as you want. Enter -99 to stop \n";
+    cin >> x;
+    while (x != -99)
+    {
+        B = addToTree(B, x);
+        cin >> x;
+    }
+    cout << "\n Preorder Traversal \n";
+    preorderTrav(B);
+    cout << "\n Inorder Traversal \n";
+    inorderTrav(B);
+    cout << "\n Postorder Traversal \n";
+    postorderTrav(B);
+    cout << "Enter a number whose parent is to be searched: ";
+    cin >> x;
+    temp = searchParent(B, x);
+    if (temp)
+    {
+        cout << x << "'s parent is the node containing " << temp->data << endl;
+    }
+    else
+    {
+        cout << x << "'s parent not found \n";
+    }
+    cout << "Enter a number to be deleted from the tree \n";
+    cin >> x;
+    temp = searchTree(B, x);
+    if (temp)
+    {
+        deleteNode(B, temp);
+        cout << "After deletion of " << x << " from the current BST \n";
+        cout << "Preorder Traversal\n";
+        preorderTrav(B);
+        cout << "Inorder Traversal \n";
+        inorderTrav(B);
+        cout << "Postorder Traversal \n";
+        postorderTrav(B);
+    }
+    else
+    {
+        cout << x << " not found in the current BST \n";
+    }
+    destroyTree(B);
+    
+    return 0;
+}
