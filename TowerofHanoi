@@ -1,0 +1,24 @@
+#include<iostream>
+using namespace std;
+void towers(int,char,char,char);
+int main()
+{
+	int n;
+	cout<<"Enter the number of disks\n";
+	cin>>n;
+	towers(n,'A','C','B');
+	return 0;
+	
+}
+void towers(int n, char from,char to,char aux)
+{
+	if(n==1)
+	{
+		cout<<"Move disks1 from"<<from<<"to"<<to<<"\n";
+	}
+	else{
+		towers(n-1,from,aux,to);
+		cout<<"Move disks"<<n-1<<"from"<<from<<"to"<<to<<"\n";
+	}
+	towers(n-1,aux,to,from);
+}
