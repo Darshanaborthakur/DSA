@@ -1,0 +1,29 @@
+#include<iostream>
+using namespace std;
+void bubble_sort(int A[],int n)
+{
+	int pass,i,temp;
+	for(pass=0;pass<n-1;pass++)
+	{
+		for(int i=0;i<n-1;i++)
+		{
+			if(A[i]>A[i+1])
+			{
+				temp=A[i];
+				A[i]=A[i+1];
+				A[i+1]=temp;
+			}
+			
+		}
+	}
+	
+}
+int main()
+{   
+    int n,i;
+	cout<<"Enter the numbers you want to sort\n";
+	cin>>n;
+	
+		cout<<i;
+	
+}
